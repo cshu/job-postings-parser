@@ -30,7 +30,7 @@ ptype: Posting = Posting.unknown
 tdir = os.path.dirname(htm_file)
 htm = Path(htm_file).read_text()
 
-postingsrc: str
+postingsrc: str = 'internet'
 
 if htm.count('Job Bank') > 3:
  ptype = Posting.jobbank
