@@ -10,6 +10,7 @@ import argparse
 import os
 import sys
 import time
+import kwparser
 
 #class Posting(Enum)
 Posting = Enum('Posting', 'jobbank indeed linkedin unknown')
@@ -18,12 +19,20 @@ parser = argparse.ArgumentParser()
 parser.add_argument('htm')
 #parser.add_argument('keywords', help='list of keywords separated by comma. Single bar | is used to separate keywords of same meaning. e.g. skills/certs')
 parser.add_argument('keywords', help='list of keywords separated by comma. e.g. skills/certs')
+parser.add_argument('-s', '--skip-parsing', help='Skip html posting details parsing, this is usually used when website is not common job board', action='store_true')
 nmsce: argparse.Namespace = parser.parse_args()
 htm_file: str = nmsce.htm
 keywords: str = nmsce.keywords
+skip_parsing: bool = nmsce.skip_parsing
 
 kws: list[str] = keywords.split(',')
 kws = [the_kw.strip() for the_kw in kws if the_kw.strip()]
+
+txtdesc = htm_file+'.excerpt.txt'
+kwlst = htm_file+'.keywords.txt'
+if skip_parsing:
+ kwparser.kwparse(kws, txtdesc, kwlst)
+ sys.exit(0)
 
 ptype: Posting = Posting.unknown
 
@@ -148,43 +157,10 @@ else:
 
 fields = htm_file+'.fields.json'
 excerpt = htm_file+'.excerpt.html'
-txtdesc = htm_file+'.excerpt.txt'
-kwlst = htm_file+'.keywords.txt'
 Path(fields).write_text(json.dumps({'postingsrc':postingsrc, 'title':title, 'company':company, 'recruiter':recruiter}))
 Path(excerpt).write_bytes(result_html)
 if shutil.which('libreoffice') is None:
  sys.exit(0)
 
 subprocess.run(['libreoffice', '--headless', '--convert-to', 'txt:Text', excerpt], check=True, cwd=tdir)
-txtdesc = Path(txtdesc).read_text()
-txtdesclower = txtdesc.lower()
-
-lst=[]
-for kw in kws:
- haystack: str
- needle: str
- if len(kw) <= 2:
-  haystack = txtdesc
-  needle = kw
- else:
-  haystack = txtdesclower
-  needle = kw.lower()
- chkbeg = kw[0].isalnum()
- chkend = kw[-1].isalnum()
- off = 0
- while True:
-  idx = haystack.find(needle, off)
-  if -1 == idx:
-   break
-  if chkbeg and idx != 0 and haystack[idx-1].isalnum():
-   off=idx+1
-   continue
-  if chkend and idx+len(kw) != len(haystack) and haystack[idx+len(kw)].isalnum():
-   off=idx+1
-   continue
-  lst.append((idx,kw,))
-  break
-
-lst.sort()
-lstjoined = ', '.join([tup[1] for tup in lst])
-Path(kwlst).write_text(lstjoined)
+kwparser.kwparse(kws, txtdesc, kwlst)
