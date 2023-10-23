@@ -64,12 +64,14 @@ if ptype == Posting.unknown:
  raise Exception('Not a common job board')
 elif ptype == Posting.jobbank:
  soup = BeautifulSoup(htm, 'html.parser')
- wb_auto_2 = soup.find('div', {'id': 'wb-auto-2'})
- if wb_auto_2 is None:
-  raise Exception('err')
- if 'wb-auto-2' != wb_auto_2.get('id'):
-  raise Exception('err')
- child = wb_auto_2.find()
+ #wb_auto_2 = soup.find('div', {'id': 'wb-auto-2'})
+ #if wb_auto_2 is None:
+ # raise Exception('err')
+ #if 'wb-auto-2' != wb_auto_2.get('id'):
+ # raise Exception('err')
+ #child = wb_auto_2.find()
+ jobpostingdetails = soup.find('div',class_='job-posting-details')
+ child = jobpostingdetails.find()
  child = child.find()
  wb_cont = child.find()
  #print(wb_cont)
