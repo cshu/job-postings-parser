@@ -30,16 +30,21 @@ ptype: Posting = Posting.unknown
 tdir = os.path.dirname(htm_file)
 htm = Path(htm_file).read_text()
 
+postingsrc: str
+
 if htm.count('Job Bank') > 3:
  ptype = Posting.jobbank
+ postingsrc = 'Job Bank'
 if htm.count('indeed.com') > 5:
  if ptype != Posting.unknown:
   raise Exception('site detection failure')
  ptype = Posting.indeed
+ postingsrc = 'Indeed.com'
 if htm.count('linkedin.com') > 5:
  if ptype != Posting.unknown:
   raise Exception('site detection failure')
  ptype = Posting.linkedin
+ postingsrc = 'LinkedIn.com'
 
 title: str
 company: str
@@ -145,7 +150,7 @@ fields = htm_file+'.fields.json'
 excerpt = htm_file+'.excerpt.html'
 txtdesc = htm_file+'.excerpt.txt'
 kwlst = htm_file+'.keywords.txt'
-Path(fields).write_text(json.dumps({'title':title, 'company':company, 'recruiter':recruiter}))
+Path(fields).write_text(json.dumps({'postingsrc':postingsrc, 'title':title, 'company':company, 'recruiter':recruiter}))
 Path(excerpt).write_bytes(result_html)
 if shutil.which('libreoffice') is None:
  sys.exit(0)
