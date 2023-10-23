@@ -116,7 +116,7 @@ elif ptype == Posting.linkedin:
   recruiternm = hchi.find('span',class_='jobs-poster__name')
   recruiter = recruiternm.find('strong').get_text()
   if shutil.which('run-external-cmd') and shutil.which('xdg-open') and shutil.which('xclip'):
-   recruiterurl = hchi.find('a',class_='app-aware-link').get('href')
+   recruiterurl: str = hchi.find('a',class_='app-aware-link').get('href')
    if not recruiterurl.startswith('https://'):
     raise Exception('unexpected url')
    #print(recruiterurl)
