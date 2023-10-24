@@ -117,7 +117,8 @@ elif ptype == Posting.indeed:
  result_html = job_com.encode_contents()
 elif ptype == Posting.linkedin:
  soup = BeautifulSoup(htm, 'html.parser')
- mcont = soup.find('main', {'id':'main'}).find('div',class_='jobs-search__job-details').find('div',class_='jobs-details__main-content')
+ #mcont = soup.find('main', {'id':'main'}).find('div',class_='jobs-search__job-details').find('div',class_='jobs-details__main-content')
+ mcont = soup.find('main', {'id':'main'}).find('div',class_='jobs-details__main-content')
  jutc = mcont.find('div',class_='jobs-unified-top-card')
  title = jutc.find('h2',class_='job-details-jobs-unified-top-card__job-title').get_text()
  title = title.strip().title()
@@ -131,12 +132,12 @@ elif ptype == Posting.linkedin:
  if hchi:
   recruiternm = hchi.find('span',class_='jobs-poster__name')
   recruiter = recruiternm.find('strong').get_text()
-  if shutil.which('run-external-cmd') and shutil.which('xdg-open') and shutil.which('xclip'):
+  if shutil.which('run-external-cmd') and shutil.which('firefox') and shutil.which('xclip'):
    recruiterurl: str = hchi.find('a',class_='app-aware-link').get('href')
    if not recruiterurl.startswith('https://'):
     raise Exception('unexpected url')
    #print(recruiterurl)
-   subprocess.run(['run-external-cmd', 'xdg-open', recruiterurl])
+   subprocess.run(['run-external-cmd', 'firefox', recruiterurl])
    while True:
     print('Waiting for userscript in browser detect Mr./Ms.')
     time.sleep(1)
