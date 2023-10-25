@@ -100,7 +100,7 @@ elif ptype == Posting.jobbank:
  result_html = child.encode_contents()
 elif ptype == Posting.indeed:
  soup = BeautifulSoup(htm, 'html.parser')
- vjs_container = soup.find('div', {'id': 'vjs-container'})
+ vjs_container = soup.find('div', {'id': 'jobsearch-ViewjobPaneWrapper'})
  if vjs_container is None:
   raise Exception('err')
  job_com = vjs_container.find('div',class_='jobsearch-JobComponent')
