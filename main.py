@@ -151,9 +151,23 @@ elif ptype == Posting.linkedin:
     elif text_from_clip == 'LINKEDIN_CLIP_UNKNOWN':
      break
  lastel = mcont.find('div',{'id':'SALARY'}, recursive=False)
+ while lastel.next_sibling.name != 'section':
+  lastel.next_sibling.extract()
+ lsection = lastel.next_sibling
+ lastel.extract()
+ lsection.insert_before(soup.new_tag('br'))
+ lsection.insert_before(soup.new_tag('br'))
+ lsection.insert_before(soup.new_tag('br'))
+ lsection.insert_before(soup.new_tag('br'))
+ lsection = lsection.find('section')
+ lastel = lsection.find('div')
  while lastel.next_sibling:
   lastel.next_sibling.extract()
- lastel.extract()
+ lastel = lastel.find('p', class_='jobs-company__company-description')
+ while lastel.next_sibling:
+  lastel.next_sibling.extract()
+ if lastel.find(class_='inline-show-more-text__button'):
+  raise Exception('Found "show more". It must be clicked beforehand.')
  result_html = mcont.encode_contents()
 else:
  raise Exception('Unexpected error.')
