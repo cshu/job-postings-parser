@@ -13,8 +13,8 @@
     'use strict';
 
     let itext = document.body.innerText;
-    let sheidx = itext.indexOf('(She/Her)');
-    let heidx = itext.indexOf('(He/Him)');
+    let sheidx = itext.indexOf('She/Her');
+    let heidx = itext.indexOf('He/Him');
     console.log('detection');
     if (sheidx === -1) {
         if (heidx === -1) {
