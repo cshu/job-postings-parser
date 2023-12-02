@@ -124,7 +124,7 @@ elif ptype == Posting.linkedin:
  title = title.strip().title()
  if not title:
   raise Exception('title not found')
- company = jutc.find('div',class_='job-details-jobs-unified-top-card__primary-description').find('a',class_='app-aware-link').get_text()
+ company = jutc.find('div',class_='job-details-jobs-unified-top-card__primary-description-container').find('a',class_='app-aware-link').get_text()
  company = company.strip()
  if not company:
   raise Exception('company not found')
